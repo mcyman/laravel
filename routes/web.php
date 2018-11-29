@@ -10,15 +10,34 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use Illuminate\Http\Request;
+Route::post('/submit', function (Request $request) {
+    $data = $request->validate([
+        'title' => 'required|max:255',
+        'url' => 'required|url|max:255',
+        'description' => 'required|max:255',
+    ]);
+
+    $link = tap(new App\Link($data))->save();
+
+    return redirect('/');
+});
+
 
 Route::get('/', function () {
-    return view('welcome');
+    $links = \App\Link::all();
+    return view('welcome', ['links' => $links]);
 });
-Route::get('admin/{id}', function ($id) {
-    if(empty($id)){
-        return view('error_login');
-    }else {
-        return view('admin');
-    }
-    
+Route::get('/submit', function () {
+    return view('submit');
 });
+
+
+Auth::routes();
+
+Route::get('/auth', function () {
+    return view('auth/login');
+});
+
+
+Route::get('/home', 'HomeController@index')->name('home');
