@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('admin/{id}', function ($id) {
+    if(empty($id)){
+        return view('error_login');
+    }else {
+        return view('admin');
+    }
+    
+});
